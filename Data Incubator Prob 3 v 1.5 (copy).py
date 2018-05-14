@@ -11,10 +11,10 @@ import csv
 parks for the years 2016,2015,2014,2012'''
 
 '''2016'''
-with open('Nat_Parks_2016.csv','r') as csv_file:
+with open('Nat_Parks_2016.csv','r',encoding="utf8") as csv_file:
     reader = csv.reader(csv_file)
     
-    with open('cleaned_Nat_Parks_2016','w') as new_file:
+    with open('cleaned_Nat_Parks_2016','w',newline="") as new_file:
         writer = csv.writer(new_file)        
         
         next(reader)
@@ -28,10 +28,10 @@ with open('Nat_Parks_2016.csv','r') as csv_file:
             writer.writerow(line)
 
 '''2015'''            
-with open('Nat_Parks_2015.csv','r') as csv_file:
+with open('Nat_Parks_2015.csv','r',encoding="utf8") as csv_file:
     reader = csv.reader(csv_file)    
         
-    with open('cleaned_Nat_Parks_2015','w') as new_file:
+    with open('cleaned_Nat_Parks_2015','w',newline="") as new_file:
         writer = csv.writer(new_file)        
         
         next(reader)
@@ -45,10 +45,10 @@ with open('Nat_Parks_2015.csv','r') as csv_file:
             writer.writerow(line)
 
 '''2014'''            
-with open('Nat_Parks_2014.csv','r') as csv_file:
+with open('Nat_Parks_2014.csv','r',encoding="utf8") as csv_file:
     reader = csv.reader(csv_file)
     
-    with open('cleaned_Nat_Parks_2014','w') as new_file:
+    with open('cleaned_Nat_Parks_2014','w',newline="") as new_file:
         writer = csv.writer(new_file)        
         
         next(reader)
@@ -62,10 +62,10 @@ with open('Nat_Parks_2014.csv','r') as csv_file:
             writer.writerow(line)
           
 '''2012'''
-with open('Nat_Parks_2012.csv','r') as csv_file:
+with open('Nat_Parks_2012.csv','r',encoding="utf8") as csv_file:
     reader = csv.reader(csv_file)    
     
-    with open('cleaned_Nat_Parks_2012','w') as new_file:
+    with open('cleaned_Nat_Parks_2012','w',newline="") as new_file:
         writer = csv.writer(new_file)        
         
         next(reader)        
@@ -121,62 +121,109 @@ for file in cleaned_files:
 
 '''___analysis___'''
 
-print('Proportion of foreign visitors to national parks anywhere in Chile, per year')
-string = ''
-for i in range(len(cleaned_files)):
-    string += '   '+str(to_from_matrices[i][2,1]/to_from_matrices[i][2,2])
-print(string)
 
-print('Proportion of foreign visitors to national parks in Patagonia, per year')
-string = ''
-for i in range(len(cleaned_files)):
-    string += '   '+str(to_from_matrices[i][1,1]/to_from_matrices[i][1,2])
-print(string)
+print('For years\n[2012,2014,2015,2016]')
 
-print('Proportion of foreign visitors to national parks not in Patagonia, per year')
-string = ''
-for i in range(len(cleaned_files)):
-    string += '   '+str(to_from_matrices[i][0,1]/to_from_matrices[i][0,2])
-print(string)
-
-print('number of visitors to national parks, per year')
+print('\nNumber of visitors to national parks')
 any_total = []
 for i in range(len(cleaned_files)):
     any_total.append(to_from_matrices[i][2,2])
 print(any_total)
 
-print('number of foreign visitors to national parks, per year')
+print('\nNumber of foreign visitors to national parks')
 any_foreign = []
 for i in range(len(cleaned_files)):
     any_foreign.append(to_from_matrices[i][2,1])
 print(any_foreign)
 
-print('number of visitors to national parks in Patagonia, per year')
+print('\nNumber of visitors to national parks in Patagonia')
 pata_total = []
 for i in range(len(cleaned_files)):
     pata_total.append(to_from_matrices[i][1,2])
 print(pata_total)
 
-print('number of foreign visitors to national parks in Patagonia, per year')
+print('\nNumber of foreign visitors to national parks in Patagonia')
 pata_foreign = []
 for i in range(len(cleaned_files)):
     pata_foreign.append(to_from_matrices[i][1,1])
 print(pata_foreign)
 
+print('\nProportion of foreign visitors to national parks anywhere in Chile')
+foreign__over_any_anywhere = []
+for i in range(len(cleaned_files)):
+    foreign__over_any_anywhere.append(to_from_matrices[i][2,1]/to_from_matrices[i][2,2])
+print(foreign__over_any_anywhere)
 
-'''__regression__'''
+print('\nProportion of foreign visitors to national parks in Patagonia')
+foreign__over_any_pata = []
+for i in range(len(cleaned_files)):
+    foreign__over_any_pata.append(to_from_matrices[i][1,1]/to_from_matrices[i][1,2])
+print(foreign__over_any_pata)
+
+print('\nProportion of foreign visitors to national parks not in Patagonia')
+foreign__over_any_not_pata = []
+for i in range(len(cleaned_files)):
+    foreign__over_any_not_pata.append(to_from_matrices[i][0,1]/to_from_matrices[i][0,2])
+print(foreign__over_any_not_pata)
+
+
+'''__linear_regression__'''
+
 
 from scipy import *
+from numpy.polynomial.polynomial import polyval
 
-years = [2,4,5,6]
-p1 = polyfit(years,any_total,1)
-p2 = polyfit(years,any_foreign,1)
-p3 = polyfit(years,pata_total,1)
-p4 = polyfit(years,pata_foreign,1)
-print(p1[0],p2[0],p3[0],p4[0])
+years = [2012,2014,2015,2016]
+p0 = polyfit(years,any_total,1)
+#p1 = polyfit(years,any_foreign,1)
+#p2 = polyfit(years,pata_total,1)
+#p3 = polyfit(years,pata_foreign,1)
 
 
 '''__growth factors__'''
 
+
 growth_factors = [any_total[3]/any_total[0],any_foreign[3]/any_foreign[0],pata_total[3]/pata_total[0],pata_foreign[3]/pata_foreign[0]]
-print(percent_growth)
+print('\nThe total number of visitors to patagonia grew by a factor of\n',growth_factors[2])
+
+
+'''__plotting__'''
+
+import matplotlib.pyplot as plt
+
+'''visitors to national parks in Chile as a function of year with 
+linear regression  superimposed'''
+ 
+x = years + [2017,2018,2019]
+y = polyval(x,[p0[1],p0[0]])
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(x, y, color='lightblue', linewidth=3)
+ax.scatter(years, any_total, color = 'darkblue', marker='^')
+ax.set_xlim(2011.8, 2019.2)
+ax.set_ylim(0, 4000000)
+ax.set(title='Visitors to National Parks in Chile',ylabel='Number of visitors',xlabel='Years')
+plt.savefig('linreg_total_any.png') 
+plt.show()
+plt.clf()
+
+    
+'''contrasting foreign visitors to national parks in patagonia for 
+years under consideration'''
+
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+x1 = [ x-.2 for x in years]
+in_pata = ax.bar(x1,foreign__over_any_pata, width=.3, color='green')
+x2 = [ x+.2 for x in years]
+out_pata = ax.bar(x2,foreign__over_any_not_pata, width=.3, color='lightgreen')
+
+ax.set_ylim(0, 1)
+ax.legend((in_pata,out_pata), ('Inside Patagonia','Outside Patagonia'))
+ax.set(title='Proportion of Foreign Visitors to Chilean National Parks',ylabel=' ',xlabel='Years')
+
+plt.savefig('proportion_foreign_pata.png') 
+plt.show()
+plt.clf()
+
