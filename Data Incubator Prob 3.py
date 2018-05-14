@@ -191,8 +191,7 @@ print('\nThe total number of visitors to patagonia grew by a factor of\n',growth
 
 import matplotlib.pyplot as plt
 
-'''visitors to national parks in Chile as a function of year with 
-linear regression  superimposed'''
+'''visitors to national parks in Chile vs. year with superimposed linear regression'''
  
 x = years + [2017,2018,2019]
 y = polyval(x,[p0[1],p0[0]])
@@ -208,8 +207,7 @@ plt.show()
 plt.clf()
 
     
-'''contrasting foreign visitors to national parks in patagonia for 
-years under consideration'''
+'''contrasting proportion of foreign visitors to national parks in patagonia'''
 
 
 fig = plt.figure()
